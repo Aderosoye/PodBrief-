@@ -2,9 +2,8 @@ import openai
 import tempfile
 
 def transcribe_audio(audio_file):
-    with tempfile.NamedTemporaryFile(delete=False, suffix=".wav") as tmp:
+    with tempfile.NamedTemporaryFile(delete=False, suffix=".mp3") as tmp:
         audio_file.save(tmp.name)
-        with open(tmp.name, "rb") as f:
-            transcript = openai.Audio.transcribe("whisper-1", f)
-    return transcript['text']
-
+        tmp.flush()
+        response = openai.Audio.transcribe("whisper-1", open(tmp.name, "rb"))
+    return response["text"]
